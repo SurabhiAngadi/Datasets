@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dataset
+spec:
+  selector:
+    matchLabels:
+      app: dataset
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: dataset
+    spec:
+      containers:
+        - name: dataset
+          image: surabhi1510/apirepo:dataset-img
+          ports:
+            - containerPort: 8080
+          env:   # Setting Enviornmental Variables
+            - name: POSTGRES_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config  # name of configMap
+                  key: POSTGRES_HOST
+            - name: POSTGRES_DB  # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER  # Setting Database username from Secret
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config # Secret Name
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: POSTGRES_PASSWORD
+

@@ -94,7 +94,16 @@ public class ResponseHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    protected ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException exception){
+        Map<String,Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("id", "api.dataset.get");
+        responseBody.put("ver", "v1");
+        Map<String,Object> param = new LinkedHashMap<>();
+        param.put("errormsg","No DatasetFound");
+        responseBody.put("param",param);
+        responseBody.put("result",new HashMap<>());
 
-
-
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+    }
 }

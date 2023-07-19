@@ -1,6 +1,6 @@
 package com.example.datasetProj.controller;
 
-import com.example.datasetProj.entities.Dataset;
+import com.example.datasetProj.model.Dataset;
 import com.example.datasetProj.exception.ResponseHandler;
 import com.example.datasetProj.service.DatasetService;
 import org.modelmapper.ModelMapper;

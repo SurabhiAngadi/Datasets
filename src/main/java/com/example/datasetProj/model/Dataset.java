@@ -1,9 +1,7 @@
-package com.example.datasetProj.entities;
+package com.example.datasetProj.model;
 
 import com.sun.istack.NotNull;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -21,7 +19,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "datasets")
-@TypeDefs({@TypeDef(name="jsonb",typeClass = JsonBinaryType.class)})
 public class Dataset {
 
     @Id
@@ -36,12 +33,12 @@ public class Dataset {
     @NotNull
     @Type(type = "jsonb")
     @Column(name = "data_schema", columnDefinition = "jsonb")
-    private Map<String, String> data_schema = new HashMap<>();
+    private Map<String, Object> data_schema = new HashMap<>();
 
     @NotNull
     @Type(type = "jsonb")
     @Column(name = "router_config", columnDefinition = "jsonb")
-    private Map<String, String> router_config = new HashMap<>();
+    private Map<String, Object> router_config = new HashMap<>();
 
     @Enumerated(EnumType.STRING)
     public Status status;
@@ -85,19 +82,19 @@ public class Dataset {
         this.name = name;
     }
 
-    public Map<String, String> getData_schema() {
+    public Map<String, Object> getData_schema() {
         return data_schema;
     }
 
-    public void setData_schema(Map<String, String> data_schema) {
+    public void setData_schema(Map<String, Object> data_schema) {
         this.data_schema = data_schema;
     }
 
-    public Map<String, String> getRouter_config() {
+    public Map<String, Object> getRouter_config() {
         return router_config;
     }
 
-    public void setRouter_config(Map<String, String> router_config) {
+    public void setRouter_config(Map<String, Object> router_config) {
         this.router_config = router_config;
     }
 

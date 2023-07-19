@@ -1,7 +1,6 @@
 package com.example.datasetProj.service;
 
-import com.example.datasetProj.entities.Dataset;
-import com.example.datasetProj.exception.ResponseHandler;
+import com.example.datasetProj.model.Dataset;
 import com.example.datasetProj.repository.DatasetRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.xml.bind.ValidationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -80,7 +78,6 @@ public class DatasetServiceTest {
         dataset.setUpdatedBy("Qwerty");
         dataset.setCreatedDate(LocalDateTime.now());
         dataset.setUpdatedDate(LocalDateTime.now());
-//        when(datasetRepository.save(any(Dataset.class))).thenReturn(dataset);
         Dataset db = datasetService.createDataset(dataset);
         assertNull(db);
     }

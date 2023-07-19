@@ -1,6 +1,6 @@
 package com.example.datasetProj.controller;
 
-import com.example.datasetProj.entities.Dataset;
+import com.example.datasetProj.model.Dataset;
 import com.example.datasetProj.service.DatasetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -71,9 +71,26 @@ class DatasetControllerTest {
         dataset.setUpdatedBy("Qwerty");
         dataset.setCreatedDate(LocalDateTime.now());
         dataset.setUpdatedDate(LocalDateTime.now());
-
         when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
+        this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dataset)))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 
+    @Test
+    void testCreateDataset_success1() throws Exception {
+
+        dataset = new Dataset();
+        dataset.setId(UUID.randomUUID());
+        dataset.setName("Surabhi");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setCreatedBy("Surabhi");
+        dataset.setUpdatedBy("Qwerty");
+        dataset.setCreatedDate(LocalDateTime.now());
+        dataset.setUpdatedDate(LocalDateTime.now());
+        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
         this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dataset)))
                 .andExpect(status().isOk())
@@ -92,9 +109,7 @@ class DatasetControllerTest {
         dataset.setUpdatedBy(null);
         dataset.setCreatedDate(LocalDateTime.now());
         dataset.setUpdatedDate(LocalDateTime.now());
-
         when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
-
         this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dataset)))
                 .andExpect(status().isBadRequest())
@@ -104,7 +119,7 @@ class DatasetControllerTest {
     @Test
     void testGetByid_success() throws Exception {
         when(datasetService.getDatasetById(UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).thenReturn(dataset);
-        this.mockMvc.perform(get("/dataset/get/51ababe2-a1e7-48ac-9e0d-c8be18eeadea",UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/dataset/get/51ababe2-a1e7-48ac-9e0d-c8be18eeadea", UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).andDo(print()).andExpect(status().isOk());
     }
 
     @Test

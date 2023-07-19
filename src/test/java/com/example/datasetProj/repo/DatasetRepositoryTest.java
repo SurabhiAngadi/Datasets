@@ -1,6 +1,6 @@
 package com.example.datasetProj.repo;
 
-import com.example.datasetProj.entities.Dataset;
+import com.example.datasetProj.model.Dataset;
 import com.example.datasetProj.repository.DatasetRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,14 +12,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -32,8 +30,8 @@ public class DatasetRepositoryTest {
     @BeforeEach
     void init() {
         dataset = new Dataset();
-        dataset.setId(UUID.fromString("96514e00-1aac-4647-83ab-bc2a31179173"));
-        dataset.setName("Surabhi");
+        dataset.setId(UUID.fromString("de5ee65b-fc16-4816-9c22-c4e9d2d562f4"));
+        dataset.setName("Sanketika");
         dataset.setData_schema(new HashMap<>());
         dataset.setRouter_config(new HashMap<>());
         dataset.setStatus(Dataset.Status.Draft);
@@ -51,7 +49,7 @@ public class DatasetRepositoryTest {
     @Test
     @DisplayName("Should return dataset by its id")
     void getDatasetById_success() {
-        Dataset db = datasetRepository.findById(UUID.fromString("96514e00-1aac-4647-83ab-bc2a31179173"));
+        Dataset db = datasetRepository.findById(UUID.fromString("de5ee65b-fc16-4816-9c22-c4e9d2d562f4"));
         assertTrue(db.getId() != null);
         assertThat(db.getId()).isEqualTo(dataset.getId());
     }
