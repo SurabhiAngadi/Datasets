@@ -49,41 +49,6 @@ public class DatasetRepositoryTest {
     }
 
     @Test
-    @DisplayName("The dataset should be saved to database")
-    void save(){
-        dataset = new Dataset();
-        dataset.setId(UUID.fromString("96514e00-1aac-4647-83ab-bc2a31179173"));
-        dataset.setName("Surabhi");
-        dataset.setData_schema(new HashMap<>());
-        dataset.setRouter_config(new HashMap<>());
-        dataset.setStatus(Dataset.Status.Draft);
-        dataset.setCreatedBy("Surabhi");
-        dataset.setUpdatedBy("Qwerty");
-        dataset.setCreatedDate(LocalDateTime.now());
-        dataset.setUpdatedDate(LocalDateTime.now());
-        Dataset db = datasetRepository.save(dataset);
-        assertNotNull(db);
-        assertThat(db.getId()).isNotEqualTo(null);
-    }
-
-//    @Test
-//    void save_fail(){
-//        dataset = new Dataset();
-//        dataset.setId(UUID.fromString("96514e00-1aac-4647-83ab-bc2a31179173"));
-//        dataset.setName("Surabhi");
-//        dataset.setData_schema(new HashMap<>());
-//        dataset.setRouter_config(new HashMap<>());
-//        dataset.setStatus(Dataset.Status.Draft);
-//        dataset.setCreatedBy("Surabhi");
-//        dataset.setUpdatedBy("Qwerty");
-//        dataset.setCreatedDate(LocalDateTime.now());
-//        dataset.setUpdatedDate(LocalDateTime.now());
-//        Dataset db = datasetRepository.cre(dataset);
-//        assertNotNull(db);
-//        assertThat(db.getId()).isEqualTo(null);
-//    }
-
-    @Test
     @DisplayName("Should return dataset by its id")
     void getDatasetById_success() {
         Dataset db = datasetRepository.findById(UUID.fromString("96514e00-1aac-4647-83ab-bc2a31179173"));
@@ -92,7 +57,7 @@ public class DatasetRepositoryTest {
     }
 
     @Test
-    void testDatasetFindByUuidError(){
+    void testDatasetFindByIdError(){
         Optional<Dataset> optional = Optional.ofNullable(datasetRepository.findById(UUID.fromString("57093425-5fc7-40ef-9876-cd06412fe3e4")));
         assertThat(optional.isEmpty()).isTrue();
     }

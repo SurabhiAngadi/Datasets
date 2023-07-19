@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.xml.bind.ValidationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -43,12 +44,14 @@ public class DatasetServiceTest {
         dataset.setCreatedDate(LocalDateTime.now());
         dataset.setUpdatedDate(LocalDateTime.now());
     }
+
     @AfterEach
-    void tearDown(){
+    void tearDown() {
 
     }
+
     @Test
-    void save_success(){
+    void save_success() {
         dataset = new Dataset();
         dataset.setId(UUID.randomUUID());
         dataset.setName("Surabhi");
@@ -62,8 +65,11 @@ public class DatasetServiceTest {
         when(datasetRepository.save(any(Dataset.class))).thenReturn(dataset);
         Dataset db = datasetService.createDataset(dataset);
         assertNotNull(db);
+        assertEquals(dataset, db);
+
     }
-    @Test
+
+        @Test
     void save_failure(){
         dataset = new Dataset();
         dataset.setId(UUID.randomUUID());
@@ -79,7 +85,7 @@ public class DatasetServiceTest {
         assertNull(db);
     }
     @Test
-    void getById_success(){
+    void getById_success() {
         dataset = new Dataset();
         dataset.setId(UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"));
         dataset.setName("Surabhi");
@@ -95,11 +101,14 @@ public class DatasetServiceTest {
         assertNotNull(data);
         assertThat(data.getId()).isNotEqualTo(null);
     }
+
     @Test
-    void getDatasetById_failure(){
-        when(datasetRepository.findById(UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).thenReturn(dataset);
-        assertThrows(RuntimeException.class, ()->{
+    void getDatasetById_failure() {
+        when(datasetRepository.findById(UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).thenThrow(new NoSuchElementException("User Not Found"));
+        Exception ex = assertThrows(RuntimeException.class, () -> {
             datasetService.getDatasetById(dataset.getId());
         });
+
     }
 }
+

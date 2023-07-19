@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @NoArgsConstructor
-@AllArgsConstructor
-@Data
 @Entity
 @Table(name = "datasets")
 @TypeDefs({@TypeDef(name="jsonb",typeClass = JsonBinaryType.class)})
@@ -71,5 +69,76 @@ public class Dataset {
         Retired
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Map<String, String> getData_schema() {
+        return data_schema;
+    }
+
+    public void setData_schema(Map<String, String> data_schema) {
+        this.data_schema = data_schema;
+    }
+
+    public Map<String, String> getRouter_config() {
+        return router_config;
+    }
+
+    public void setRouter_config(Map<String, String> router_config) {
+        this.router_config = router_config;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDateTime updatedDate) {
+        this.updatedDate = updatedDate;
+    }
 }
 

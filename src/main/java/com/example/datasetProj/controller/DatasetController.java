@@ -3,12 +3,9 @@ package com.example.datasetProj.controller;
 import com.example.datasetProj.entities.Dataset;
 import com.example.datasetProj.exception.ResponseHandler;
 import com.example.datasetProj.service.DatasetService;
-import com.sun.istack.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +26,7 @@ public class DatasetController {
             return new ModelMapper();
         }
 
+
     @Autowired
     public DatasetController(DatasetService datasetService) {
         this.datasetService = datasetService;
@@ -39,25 +37,28 @@ public class DatasetController {
                 dataset.setStatus(Dataset.Status.Draft);
             }
             datasetService.createDataset(dataset);
-            Map<String, Object> param = new HashMap<>();
-            param.put("errmsg", " ");
+            ResponseHandler responseHandler = new ResponseHandler();
+            responseHandler.setId("api.dataset.create");
+            responseHandler.setVer("v1");
+            responseHandler.setParam(new HashMap<>());
+            Map<String,Object> id = new HashMap<>();
+            id.put("id",dataset.getId());
+            responseHandler.setResult(id);
 
-            Map<String, Object> success = new HashMap<>();
-            success.put("id", dataset.getId());
-
-            return new ResponseHandler("api.dataset.create", "v1", param, success);
-
+            return responseHandler;
     }
     @GetMapping("/get/{id}")
     public ResponseHandler getDataById(@PathVariable()UUID id) {
         Optional<Dataset> optional = ofNullable(datasetService.getDatasetById(id));
-        Map<String ,Object> param = new HashMap<>();
-        param.put("errmsg"," ");
+        ResponseHandler responseHandler = new ResponseHandler();
+        responseHandler.setId("api.dataset.get");
+        responseHandler.setVer("v1");
+        responseHandler.setParam(new HashMap<>());
+        Map<String,Object> data = new HashMap<>();
+        data.put("dataset",optional.get());
+        responseHandler.setResult(data);
 
-        Map<String , Object> success =  new HashMap<>();
-        success.put("dataset",optional.get());
-
-        return new ResponseHandler("api.dataset.get", "v1", param, success);
+        return responseHandler;
     }
 }
 

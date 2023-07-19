@@ -104,7 +104,7 @@ class DatasetControllerTest {
     @Test
     void testGetByid_success() throws Exception {
         when(datasetService.getDatasetById(UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).thenReturn(dataset);
-        this.mockMvc.perform(get("/dataset/get/51ababe2-a1e7-48ac-9e0d-c8be18eeadea")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/dataset/get/51ababe2-a1e7-48ac-9e0d-c8be18eeadea",UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).andDo(print()).andExpect(status().isOk());
     }
 
     @Test

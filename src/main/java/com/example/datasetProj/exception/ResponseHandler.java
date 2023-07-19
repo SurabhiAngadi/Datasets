@@ -19,8 +19,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.*;
-@Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Component
 @ControllerAdvice
@@ -30,6 +29,37 @@ public class ResponseHandler extends ResponseEntityExceptionHandler {
     private Map<String , Object> param ;
     private Map<String , Object> result ;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getVer() {
+        return ver;
+    }
+
+    public void setVer(String ver) {
+        this.ver = ver;
+    }
+
+    public Map<String, Object> getParam() {
+        return param;
+    }
+
+    public void setParam(Map<String, Object> param) {
+        this.param = param;
+    }
+
+    public Map<String, Object> getResult() {
+        return result;
+    }
+
+    public void setResult(Map<String, Object> result) {
+        this.result = result;
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -50,20 +80,8 @@ public class ResponseHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(responseBody,headers,status);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        Map<String,Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("id", "api.dataset.create");
-        responseBody.put("ver", "v1");
-        String msg =e.getLocalizedMessage();
-        responseBody.put("param",msg);
-        responseBody.put("responseCode",status.value());
-        responseBody.put("result", new HashMap<>());
-
-        return new ResponseEntity<>(responseBody,headers,status);
-    }
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-   protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
+    protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
         Map<String,Object> responseBody = new LinkedHashMap<>();
         responseBody.put("id","api.dataset.get");
         responseBody.put("ver","v1");
@@ -76,17 +94,7 @@ public class ResponseHandler extends ResponseEntityExceptionHandler {
 
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    protected ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException exception){
-        Map<String,Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("id", "api.dataset.get");
-        responseBody.put("ver", "v1");
-        Map<String,Object> param = new LinkedHashMap<>();
-        param.put("errormsg","No DatasetFound");
-        responseBody.put("param",param);
-        responseBody.put("result",new HashMap<>());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
-    }
+
 
 }
