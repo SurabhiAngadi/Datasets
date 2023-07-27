@@ -98,6 +98,27 @@ class DatasetControllerTest {
     }
 
     @Test
+    void testCreateDataset_success1() throws Exception {
+
+        dataset = new Dataset();
+        dataset.setId(UUID.randomUUID());
+        dataset.setName("Surabhi");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setCreatedBy("Surabhi");
+        dataset.setUpdatedBy("Qwerty");
+        dataset.setCreatedDate(LocalDateTime.now());
+        dataset.setUpdatedDate(LocalDateTime.now());
+
+        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
+
+        this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dataset)))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
     void testCreateDataset_fail() throws Exception {
         dataset = new Dataset();
         dataset.setId(UUID.randomUUID());
