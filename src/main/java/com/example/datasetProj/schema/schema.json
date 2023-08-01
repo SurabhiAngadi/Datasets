@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 5,
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "data_schema": {
+      "type": "object",
+      "properties": {
+        "$id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "router_config": {
+      "type": "object",
+      "properties": {
+        "topic": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Draft","Live","Retired"],
+      "default": "Draft"
+    },
+    "created_by": {
+      "type": "string",
+      "minLength": 5
+    },
+    "updated_by": {
+      "type": "string",
+      "minLength": 5
+    }
+  },
+  "required": [
+    "name",
+    "data_schema",
+    "router_config",
+    "created_by",
+    "updated_by"
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

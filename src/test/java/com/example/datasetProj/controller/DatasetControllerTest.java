@@ -3,8 +3,6 @@ package com.example.datasetProj.controller;
 import com.example.datasetProj.model.Dataset;
 import com.example.datasetProj.service.DatasetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,24 +10,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-
-
-import java.time.LocalDateTime;
+import org.springframework.test.web.servlet.MvcResult;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(DatasetController.class)
+
+@WebMvcTest
 @ExtendWith(MockitoExtension.class)
 class DatasetControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -39,114 +36,230 @@ class DatasetControllerTest {
 
     private Dataset dataset;
 
-    @BeforeEach
-    void init() {
-        dataset = new Dataset();
-        dataset.setId(UUID.randomUUID());
-        dataset.setName("Surabhi");
-        dataset.setData_schema(new HashMap<>());
-        dataset.setRouter_config(new HashMap<>());
-        dataset.setStatus(Dataset.Status.Draft);
-        dataset.setCreatedBy("Surabhi");
-        dataset.setUpdatedBy("Qwerty");
-        dataset.setCreatedDate(LocalDateTime.now());
-        dataset.setUpdatedDate(LocalDateTime.now());
-    }
-
-    @AfterEach
-    void tearDown() {
-
-    }
-
     @Test
     void testCreateDataset_success() throws Exception {
 
         dataset = new Dataset();
-        dataset.setId(UUID.randomUUID());
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
         dataset.setName("Surabhi");
         dataset.setData_schema(new HashMap<>());
         dataset.setRouter_config(new HashMap<>());
         dataset.setStatus(Dataset.Status.Draft);
-        dataset.setCreatedBy("Surabhi");
-        dataset.setUpdatedBy("Qwerty");
-        dataset.setCreatedDate(LocalDateTime.now());
-        dataset.setUpdatedDate(LocalDateTime.now());
+        dataset.setCreated_by("Surabhi");
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
         when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
-        this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dataset)))
-                .andExpect(status().isOk())
-                .andDo(print());
+        MvcResult mvcResult = mockMvc.perform(post("/dataset/create").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("result");
+        String id = (String) result.get("id");
+        assertEquals(uuid.toString(), id);
+        assertEquals(200,status);
     }
 
     @Test
-    void testCreateDataset_success1() throws Exception {
-
+    void testInvlidName() throws Exception {
         dataset = new Dataset();
-        dataset.setId(UUID.randomUUID());
-        dataset.setName("Surabhi");
-        dataset.setData_schema(new HashMap<>());
-        dataset.setRouter_config(new HashMap<>());
-        dataset.setCreatedBy("Surabhi");
-        dataset.setUpdatedBy("Qwerty");
-        dataset.setCreatedDate(LocalDateTime.now());
-        dataset.setUpdatedDate(LocalDateTime.now());
-        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
-        this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dataset)))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    void testCreateDataset_success1() throws Exception {
-
-        dataset = new Dataset();
-        dataset.setId(UUID.randomUUID());
-        dataset.setName("Surabhi");
-        dataset.setData_schema(new HashMap<>());
-        dataset.setRouter_config(new HashMap<>());
-        dataset.setCreatedBy("Surabhi");
-        dataset.setUpdatedBy("Qwerty");
-        dataset.setCreatedDate(LocalDateTime.now());
-        dataset.setUpdatedDate(LocalDateTime.now());
-
-        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
-
-        this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dataset)))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    void testCreateDataset_fail() throws Exception {
-        dataset = new Dataset();
-        dataset.setId(UUID.randomUUID());
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
         dataset.setName("Surabhi123");
         dataset.setData_schema(new HashMap<>());
         dataset.setRouter_config(new HashMap<>());
         dataset.setStatus(Dataset.Status.Draft);
-        dataset.setCreatedBy("Surabhi");
-        dataset.setUpdatedBy(null);
-        dataset.setCreatedDate(LocalDateTime.now());
-        dataset.setUpdatedDate(LocalDateTime.now());
+        dataset.setCreated_by("Surabhi");
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
         when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
-        this.mockMvc.perform(post("/dataset/create").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dataset)))
-                .andExpect(status().isBadRequest())
-                .andDo(print());
+        MvcResult mvcResult = mockMvc.perform(post("/dataset/create").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("param");
+        String errMsg = (String) result.get("errormsg");
+        assertEquals("$.name: does not match the regex pattern ^[a-zA-Z]+$\n",errMsg);
+        assertEquals(400,status);
     }
+
+    @Test
+    void testNameMinLengthRequired() throws Exception {
+        dataset = new Dataset();
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
+        dataset.setName("Sam");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setStatus(Dataset.Status.Draft);
+        dataset.setCreated_by("Surabhi");
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
+        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
+        MvcResult mvcResult = mockMvc.perform(post("/dataset/create").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("param");
+        String errMsg = (String) result.get("errormsg");
+        assertEquals("$.name: must be at least 5 characters long\n",errMsg);
+        assertEquals(400,status);
+    }
+
+    @Test
+    void testStatusShouldNotBeNull() throws Exception {
+        dataset = new Dataset();
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
+        dataset.setName("Sampada");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setStatus(null);
+        dataset.setCreated_by("Surabhi");
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
+        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
+        MvcResult mvcResult = mockMvc.perform(post("/dataset/create").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("param");
+        String errMsg = (String) result.get("errormsg");
+        assertEquals("$.status: does not have a value in the enumeration [Draft, Live, Retired]\n$.status: null found, string expected\n",errMsg);
+        assertEquals(400,status);
+    }
+
+    @Test
+    void testCreatedbyShouldNotBenull() throws Exception {
+        dataset = new Dataset();
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
+        dataset.setName("Sampada");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setStatus(Dataset.Status.Draft);
+        dataset.setCreated_by(null);
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
+        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
+        MvcResult mvcResult = mockMvc.perform(post("/dataset/create").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("param");
+        String errMsg = (String) result.get("errormsg");
+        assertEquals("$.created_by: null found, string expected\n",errMsg);
+        assertEquals(400,status);
+    }
+
+    @Test
+    void testUpdatedbyShouldNotBenull() throws Exception {
+        dataset = new Dataset();
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
+        dataset.setName("Sampada");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setStatus(Dataset.Status.Draft);
+        dataset.setCreated_by("Spring");
+        dataset.setUpdated_by(null);
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
+        when(datasetService.createDataset(any(Dataset.class))).thenReturn(dataset);
+        MvcResult mvcResult = mockMvc.perform(post("/dataset/create").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("param");
+        String errMsg = (String) result.get("errormsg");
+        assertEquals("$.updated_by: null found, string expected\n",errMsg);
+        assertEquals(400,status);
+    }
+
 
     @Test
     void testGetByid_success() throws Exception {
-        when(datasetService.getDatasetById(UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).thenReturn(dataset);
-        this.mockMvc.perform(get("/dataset/get/51ababe2-a1e7-48ac-9e0d-c8be18eeadea", UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).andDo(print()).andExpect(status().isOk());
+        dataset = new Dataset();
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
+        dataset.setName("Surabhi");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setStatus(Dataset.Status.Live);
+        dataset.setCreated_by("Surabhi");
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
+        when(datasetService.getDatasetByUuid(uuid)).thenReturn(dataset);
+        MvcResult mvcResult = mockMvc.perform(get("/dataset/get/e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("result");
+        Map<String, Object> data = (Map<String, Object>) result.get("dataset");
+        assertEquals(200,status);
     }
 
     @Test
-    void testGetByid_fail() throws Exception {
-        when(datasetService.getDatasetById(UUID.fromString("51ababe2-a1e7-48ac-9e0d-c8be18eeadea"))).thenReturn(dataset);
-        this.mockMvc.perform(get("/dataset/get/51ababe2-a1e7-48ac-9e0d")).andDo(print()).andExpect(status().isBadRequest());
+    void testForInvalidId() throws Exception {
+        dataset = new Dataset();
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
+        dataset.setName("Surabhi");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setStatus(Dataset.Status.Live);
+        dataset.setCreated_by("Surabhi");
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
+        when(datasetService.getDatasetByUuid(uuid)).thenReturn(dataset);
+        MvcResult mvcResult = mockMvc.perform(get("/dataset/get/abcdefghi").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("param");
+        String msg = (String) result.get("errormsg");
+        assertEquals("Invalid Id",msg);
+        assertEquals(400,status);
+    }
+
+    @Test
+    void testForNoDatasetFound() throws Exception {
+        dataset = new Dataset();
+        UUID uuid = UUID.fromString("e12bf1cf-28aa-4c51-b6b8-813a7e4ad7f9");
+        dataset.setUuid(uuid);
+        dataset.setName("Surabhi");
+        dataset.setData_schema(new HashMap<>());
+        dataset.setRouter_config(new HashMap<>());
+        dataset.setStatus(Dataset.Status.Live);
+        dataset.setCreated_by("Surabhi");
+        dataset.setUpdated_by("Qwerty");
+        dataset.setCreatedDate(System.currentTimeMillis());
+        dataset.setUpdatedDate(System.currentTimeMillis());
+        when(datasetService.getDatasetByUuid(uuid)).thenReturn(dataset);
+        MvcResult mvcResult = mockMvc.perform(get("/dataset/get/e12bf1cf-28aa-4c51-b6b8-813a7e12345").content(objectMapper.writeValueAsString(dataset)).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        System.out.println(response.getContentAsString());
+        int status = response.getStatus();
+        Map<String, Object> responseMap= objectMapper.readValue(response.getContentAsString(), Map.class);
+        Map<String, Object> result = (Map<String, Object>) responseMap.get("param");
+        String msg = (String) result.get("errormsg");
+        assertEquals("No DatasetFound",msg);
+        assertEquals(400,status);
     }
 
 

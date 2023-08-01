@@ -1,13 +1,12 @@
 package com.example.datasetProj.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -23,19 +22,16 @@ public class Dataset {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @Column(name = "uuid")
+    private UUID uuid;
 
-    @NotEmpty
-    @Pattern(regexp = "[a-zA-Z]*")
     @Column(name="name")
     private String name;
 
-    @NotNull
     @Type(type = "jsonb")
     @Column(name = "data_schema", columnDefinition = "jsonb")
     private Map<String, Object> data_schema = new HashMap<>();
 
-    @NotNull
     @Type(type = "jsonb")
     @Column(name = "router_config", columnDefinition = "jsonb")
     private Map<String, Object> router_config = new HashMap<>();
@@ -43,21 +39,17 @@ public class Dataset {
     @Enumerated(EnumType.STRING)
     public Status status;
 
-    @NotEmpty
-    @Pattern(regexp = "[a-zA-Z]*")
     @Column(name = "created_by")
-    private String createdBy;
+    private String created_by;
 
-    @NotEmpty
-    @Pattern(regexp = "[a-zA-Z]*")
     @Column(name = "updated_by")
-    private String updatedBy;
+    private String updated_by;
 
     @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    private long createdDate;
 
     @Column(name = "updated_date")
-    private LocalDateTime updatedDate;
+    private long updatedDate;
 
 
     public enum Status{
@@ -66,12 +58,12 @@ public class Dataset {
         Retired
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {
@@ -106,35 +98,35 @@ public class Dataset {
         this.status = status;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getCreated_by() {
+        return created_by;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
     }
 
-    public String getUpdatedBy() {
-        return updatedBy;
+    public String getUpdated_by() {
+        return updated_by;
     }
 
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
+    public void setUpdated_by(String updated_by) {
+        this.updated_by = updated_by;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(long createdDate) {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getUpdatedDate() {
+    public long getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(long updatedDate) {
         this.updatedDate = updatedDate;
     }
 }

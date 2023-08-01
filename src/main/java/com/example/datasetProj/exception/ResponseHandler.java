@@ -1,5 +1,7 @@
 package com.example.datasetProj.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.networknt.schema.ValidationMessage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.*;
 
 @NoArgsConstructor
@@ -61,24 +65,24 @@ public class ResponseHandler extends ResponseEntityExceptionHandler {
         this.result = result;
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        Map<String,Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("id", "api.dataset.create");
-        responseBody.put("ver", "v1");
-        List<FieldError> fieldErrors= ex.getBindingResult().getFieldErrors();
-
-        Map<String, Object> listErrors = new HashMap<>();
-
-        for (FieldError fieldError : fieldErrors){
-            String errorMessage = fieldError.getDefaultMessage();
-            listErrors.put("errmsg",errorMessage);
-        }
-        responseBody.put("params",listErrors);
-        responseBody.put("result",new HashMap<>());
-
-        return new ResponseEntity<>(responseBody,headers,status);
-    }
+//    @Override
+//    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//        Map<String,Object> responseBody = new LinkedHashMap<>();
+//        responseBody.put("id", "api.dataset.create");
+//        responseBody.put("ver", "v1");
+//        List<FieldError> fieldErrors= ex.getBindingResult().getFieldErrors();
+//
+//        Map<String, Object> listErrors = new HashMap<>();
+//
+//        for (FieldError fieldError : fieldErrors){
+//            String errorMessage = fieldError.getDefaultMessage();
+//            listErrors.put("errmsg",errorMessage);
+//        }
+//        responseBody.put("params",listErrors);
+//        responseBody.put("result",new HashMap<>());
+//
+//        return new ResponseEntity<>(responseBody,headers,status);
+//    }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
@@ -106,4 +110,16 @@ public class ResponseHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
     }
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleException(RuntimeException exception){
+        Map<String,Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("id", "api.dataset.get");
+        responseBody.put("ver", "v1");
+        Map<String,Object> param = new LinkedHashMap<>();
+        param.put("errormsg",exception.getMessage());
+        responseBody.put("param",param);
+        responseBody.put("result",new HashMap<>());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+   }
 }
