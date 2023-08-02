@@ -6,6 +6,6 @@ metadata:
     app: postgres
 data:
   POSTGRES_HOST: postgres
-  POSTGRES_DB: postgresdb
+  POSTGRES_DB: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: root

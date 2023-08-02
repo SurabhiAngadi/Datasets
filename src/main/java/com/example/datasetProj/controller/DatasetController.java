@@ -15,12 +15,14 @@ import com.networknt.schema.ValidationMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
@@ -43,14 +45,22 @@ public class DatasetController {
     public DatasetController(DatasetService datasetService) {
         this.datasetService = datasetService;
     }
-
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 
+    @Value("${spring.datasource.url}")
+    private String jdbcurl;
+
+    @PostConstruct
+    private void init(){
+        System.out.println("jdbc url "+ jdbcurl);
+    }
+
     @PostMapping("/create")
     public ResponseHandler createDataset(@RequestBody String dataset) throws Exception {
+        System.out.println();
         ObjectMapper objectMapper = new ObjectMapper();
         File schemaFile = new File("/home/sankethika/IdeaProjects/Datasets/src/main/java/com/example/datasetProj/schema/schema.json");
         JsonNode jsonSchema = objectMapper.readTree(schemaFile);
